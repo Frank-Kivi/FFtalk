@@ -3,6 +3,8 @@ package com.frank.fftalk;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 public class MainActivity extends AppCompatActivity {
 

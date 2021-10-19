@@ -2,7 +2,13 @@ package com.frank.fftalk.server.util;
 
 public class Msg {
     public enum Type {
-        LoginRequest, LoginResponse, OnlineUsers;
+        LoginRequest, LoginResponse, OnlineUsers, IM, IM_ACK, IM_Error;
+    }
+
+    public class IMMsg {
+        public String from;
+        public String to;
+        public String data;
     }
 
     public enum LoginStatus {

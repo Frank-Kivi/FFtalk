@@ -2,12 +2,16 @@ package com.frank.fftalk.util;
 
 import android.util.Log;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -57,6 +61,10 @@ public class WebSocketCenter {
                         handleLoginResponse(msg.data);
                     }
                     break;
+                    case OnlineUsers :{
+                        handleOnlineUsers(msg.data);
+                    }
+                    break;
                     default:{
                     }
                     break;
@@ -74,6 +82,12 @@ public class WebSocketCenter {
             }
         };
         webSocketClient.connect();
+    }
+
+    private void handleOnlineUsers(String data) {
+        List<String> object =  JsonUtil.fromJson(data, new TypeToken<List<String>>() {
+        }.getType());
+        IMCenter.Singleton.updateOnlineUsers(object);
     }
 
     private void handleLoginResponse(String data) {

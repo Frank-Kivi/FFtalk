@@ -41,12 +41,16 @@ public class WebSocketCenter {
         webSocketServer.broadcast(JsonUtil.toJson(new Msg(type, data)));
     }
 
+    private void send(WebSocket webSocket, String s) {
+        webSocket.send(s);
+    }
+
     private void send(WebSocket webSocket, Msg.Type type, Object data) {
-        webSocket.send(JsonUtil.toJson(new Msg(type, data)));
+        send(webSocket, JsonUtil.toJson(new Msg(type, data)));
     }
 
     private void send(WebSocket webSocket, Msg.Type type, String data) {
-        webSocket.send(JsonUtil.toJson(new Msg(type, data)));
+        send(webSocket, JsonUtil.toJson(new Msg(type, data)));
     }
 
     public void init() {
@@ -71,6 +75,10 @@ public class WebSocketCenter {
                         handleUserLogin(msg.data, webSocket);
                     }
                     break;
+                    case IM: {
+                        handleIM(msg.data, webSocket, s);
+                    }
+                    break;
                     default: {
                     }
                     break;
@@ -89,5 +97,13 @@ public class WebSocketCenter {
             }
         };
         webSocketServer.start();
+    }
+
+    private void handleIM(String data, WebSocket webSocket, String s) {
+        Msg.IMMsg imMsg = JsonUtil.fromJson(data, Msg.IMMsg.class);
+        WebSocket dest = userSession.get(imMsg.from);
+        if (dest != null) {
+            send(dest, s);
+        }
     }
 }

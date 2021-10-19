@@ -1,44 +1,52 @@
 package com.frank.fftalk;
 
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.frank.fftalk.databinding.ActivityMainBinding;
+import com.frank.fftalk.util.MessageEvent;
 import com.frank.fftalk.util.Msg;
 import com.frank.fftalk.util.ServerCenter;
 
-public class LoginActivity extends AppCompatActivity implements ServerCenter.OnConnectStateChangeListener {
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-    private EditText userName;
+public class LoginActivity extends BaseActivity<ActivityMainBinding> {
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initView();
+    protected ActivityMainBinding createViewBinding() {
+        return ActivityMainBinding.inflate(getLayoutInflater());
     }
 
     public void login(View view) {
-        String s = userName.getText().toString().trim();
+        String s = viewBinding.userName.getText().toString().trim();
         ServerCenter.Singleton.init();
-        ServerCenter.Singleton.setOnConnectStateChangeListener(this);
         ServerCenter.Singleton.login(s);
     }
 
-    private void initView() {
-        userName = (EditText) findViewById(R.id.userName);
-        userName.setText("66666");
+    @Override
+    protected void initData() {
+        super.initData();
+        viewBinding.userName.setText("66666");
     }
 
+
     private static final String TAG = "LoginActivity";
-    @Override
-    public void onConnectStateChange(Msg.LoginStatus connectState) {
-        Log.i(TAG, "onConnectStateChange: "+connectState);
-        if (connectState== Msg.LoginStatus.Success){
-            MainActivity.start(this);
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        if (event.type== MessageEvent.Type.LoginResponse) {
+            Msg.LoginStatus loginStatus= (Msg.LoginStatus) event.data;
+            if (loginStatus== Msg.LoginStatus.Success){
+                MainActivity.start(this);
+            }else {
+                Toast.makeText(this, "登录失败，稍后重试", Toast.LENGTH_SHORT).show();
+            }
         }
+    };
+    @Override
+    protected boolean useEventBus() {
+        return true;
     }
 }

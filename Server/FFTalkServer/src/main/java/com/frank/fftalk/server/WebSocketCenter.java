@@ -19,21 +19,34 @@ public class WebSocketCenter {
     Map<String, WebSocket> userSession = new HashMap<>();
 
     private void handleUserLogin(String data, WebSocket webSocket) {
+        logger.info(data);
         if (userSession.containsKey(data)) {
-            Msg msg = new Msg();
-            msg.type = Msg.Type.LoginResponse;
-            msg.data = Msg.LoginStatus.Failure.name();
-            send(webSocket, msg);
+            send(webSocket, Msg.Type.LoginResponse, Msg.LoginStatus.Failure);
         } else {
-            Msg msg = new Msg();
-            msg.type = Msg.Type.LoginResponse;
-            msg.data = Msg.LoginStatus.Success.name();
-            send(webSocket, msg);
+            send(webSocket, Msg.Type.LoginResponse, Msg.LoginStatus.Success);
+            userSession.put(data, webSocket);
+            webSocket.setAttachment(data);
+
+            broadcast(Msg.Type.OnlineUsers, userSession.keySet());
         }
     }
 
-    private void send(WebSocket webSocket, Msg msg) {
-        webSocket.send(JsonUtil.toJson(msg));
+    private void broadcast(Msg.Type type, Object data) {
+        String text = JsonUtil.toJson(new Msg(type, data));
+        logger.info("broadcast:" + text);
+        webSocketServer.broadcast(text);
+    }
+
+    private void broadcast(Msg.Type type, String data) {
+        webSocketServer.broadcast(JsonUtil.toJson(new Msg(type, data)));
+    }
+
+    private void send(WebSocket webSocket, Msg.Type type, Object data) {
+        webSocket.send(JsonUtil.toJson(new Msg(type, data)));
+    }
+
+    private void send(WebSocket webSocket, Msg.Type type, String data) {
+        webSocket.send(JsonUtil.toJson(new Msg(type, data)));
     }
 
     public void init() {
@@ -45,7 +58,8 @@ public class WebSocketCenter {
 
             @Override
             public void onClose(WebSocket webSocket, int i, String s, boolean b) {
-
+                String data = webSocket.getAttachment();
+                userSession.remove(data);
             }
 
             @Override

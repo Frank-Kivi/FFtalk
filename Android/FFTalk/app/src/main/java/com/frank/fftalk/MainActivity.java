@@ -25,18 +25,29 @@ public class MainActivity extends BaseActivity<ActivityMain2Binding> {
         context.startActivity(starter);
     }
     MyAdapter<String,MainItemBinding> myAdapter;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main2;
+    }
+
     @Override
     protected void initData() {
         super.initData();
         myAdapter= new MyAdapter<String, MainItemBinding>() {
             @Override
             protected ViewHolder<String, MainItemBinding> createViewHolder(ViewGroup viewGroup) {
-                return new ViewHolder<String, MainItemBinding>(MainItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()))) {
+                return new ViewHolder<String, MainItemBinding>() {
+
+                    @Override
+                    protected int getLayoutId() {
+                        return R.layout.main_item;
+                    }
 
                     @Override
                     public void setData(String s) {
-                        this.viewBinding.name.setText(s);
-                        this.viewBinding.name.setOnClickListener(new View.OnClickListener() {
+                        this.dataBinding.name.setText(s);
+                        this.dataBinding.name.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 ChatActivity.start(MainActivity.this,s);
@@ -46,7 +57,7 @@ public class MainActivity extends BaseActivity<ActivityMain2Binding> {
                 };
             }
         };
-        viewBinding.listView.setAdapter(myAdapter);
+        dataBinding.listView.setAdapter(myAdapter);
         myAdapter.setDatas(IMCenter.Singleton.getOnlineUsers());
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -55,13 +66,7 @@ public class MainActivity extends BaseActivity<ActivityMain2Binding> {
     }};
 
     @Override
-    protected boolean useEventBus() {
+    protected boolean enableEventBus() {
         return true;
     }
-
-    @Override
-    protected ActivityMain2Binding createViewBinding() {
-        return ActivityMain2Binding.inflate(getLayoutInflater());
-    }
-
 }

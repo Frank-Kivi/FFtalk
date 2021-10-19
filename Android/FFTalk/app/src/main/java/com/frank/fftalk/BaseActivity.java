@@ -1,41 +1,47 @@
 package com.frank.fftalk;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.viewbinding.ViewBinding;
 
 import com.frank.fftalk.databinding.ActivityMainBinding;
 
 import org.greenrobot.eventbus.EventBus;
 
-public abstract class BaseActivity<V extends ViewBinding> extends AppCompatActivity {
-    protected V viewBinding;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 
-    protected boolean useEventBus;
+public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatActivity {
+    protected V dataBinding;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewBinding= createViewBinding();
-        setContentView(viewBinding.getRoot());
+        dataBinding= DataBindingUtil.setContentView(this,getLayoutId());
         initData();
-        useEventBus=useEventBus();
     }
 
-    protected boolean useEventBus() {
+    protected abstract int getLayoutId();
+
+    protected boolean enableEventBus() {
         return false;
     }
 
     protected void initData() {
     }
 
-    protected abstract V createViewBinding();
 
     @Override
     public void onStart() {
         super.onStart();
-        if (useEventBus) {
+        if (enableEventBus()) {
         EventBus.getDefault().register(this);
         }
     }
@@ -43,7 +49,7 @@ public abstract class BaseActivity<V extends ViewBinding> extends AppCompatActiv
     @Override
     public void onStop() {
         super.onStop();
-        if (useEventBus ) {
+        if (enableEventBus() ) {
         EventBus.getDefault().unregister(this);
         }
     }

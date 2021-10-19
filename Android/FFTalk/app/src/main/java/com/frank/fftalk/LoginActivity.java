@@ -13,22 +13,21 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class LoginActivity extends BaseActivity<ActivityMainBinding> {
 
-
-    @Override
-    protected ActivityMainBinding createViewBinding() {
-        return ActivityMainBinding.inflate(getLayoutInflater());
-    }
-
     public void login(View view) {
-        String s = viewBinding.userName.getText().toString().trim();
+        String s = dataBinding.userName.getText().toString().trim();
         ServerCenter.Singleton.init();
         ServerCenter.Singleton.login(s);
     }
 
     @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
     protected void initData() {
         super.initData();
-        viewBinding.userName.setText("66666");
+        dataBinding.userName.setText("66666");
     }
 
 
@@ -46,7 +45,7 @@ public class LoginActivity extends BaseActivity<ActivityMainBinding> {
         }
     };
     @Override
-    protected boolean useEventBus() {
+    protected boolean enableEventBus() {
         return true;
     }
 }

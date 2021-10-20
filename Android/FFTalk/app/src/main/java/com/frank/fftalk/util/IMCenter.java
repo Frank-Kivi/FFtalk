@@ -20,4 +20,13 @@ public class IMCenter {
         }
         MessageEvent.post(MessageEvent.Type.OnlineUserChange,onlineUsers);
     }
+
+
+    public void onReceiveMsg(Msg.IMMsg fromJson) {
+        MessageEvent.post(MessageEvent.Type.IM,fromJson);
+    }
+
+    public void send(Msg.IMMsg imMsg) {
+        ServerCenter.Singleton.sendMsg(imMsg);
+    }
 }

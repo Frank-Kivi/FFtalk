@@ -23,4 +23,7 @@ public class ServerCenter {
         MessageEvent.post(MessageEvent.Type.LoginResponse,JsonUtil.fromJson(data, Msg.LoginStatus.class));
     }
 
+    public void sendMsg(Msg.IMMsg imMsg) {
+        WebSocketCenter.Singleton.send(Msg.Type.IM,imMsg);
+    }
 }

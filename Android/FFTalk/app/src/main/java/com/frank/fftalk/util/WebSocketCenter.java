@@ -65,6 +65,10 @@ public class WebSocketCenter {
                         handleOnlineUsers(msg.data);
                     }
                     break;
+                    case IM :{
+                        handleIMMsg(msg.data);
+                    }
+                    break;
                     default:{
                     }
                     break;
@@ -82,6 +86,10 @@ public class WebSocketCenter {
             }
         };
         webSocketClient.connect();
+    }
+
+    private void handleIMMsg(String data) {
+        IMCenter.Singleton.onReceiveMsg(JsonUtil.fromJson(data, Msg.IMMsg.class));
     }
 
     private void handleOnlineUsers(String data) {

@@ -101,7 +101,7 @@ public class WebSocketCenter {
 
     private void handleIM(String data, WebSocket webSocket, String s) {
         Msg.IMMsg imMsg = JsonUtil.fromJson(data, Msg.IMMsg.class);
-        WebSocket dest = userSession.get(imMsg.from);
+        WebSocket dest = userSession.get(imMsg.to);
         if (dest != null) {
             send(dest, s);
         }

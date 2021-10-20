@@ -16,7 +16,10 @@ import java.util.List;
 
 public abstract class MyAdapter<T,V extends ViewDataBinding> extends BaseAdapter {
     List<T> datas = new ArrayList<>();
-
+    public void addData(T t){
+        datas.add(t);
+        notifyDataSetChanged();
+    }
     public void setDatas(List<T> datas) {
         this.datas.clear();
         this.datas.addAll(datas);

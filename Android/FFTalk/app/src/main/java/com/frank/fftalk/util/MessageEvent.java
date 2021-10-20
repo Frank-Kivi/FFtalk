@@ -5,7 +5,7 @@ import org.greenrobot.eventbus.EventBus;
 public class MessageEvent<T> {
 
    public enum Type{
-        LoginResponse,OnlineUserChange;
+        LoginResponse,OnlineUserChange,IM;
     }
   public   Type type;
     public   T data;

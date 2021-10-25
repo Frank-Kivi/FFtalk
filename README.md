@@ -1,4 +1,7 @@
 # FFtalk
+
+求一设计帮忙，有意者请联系：511095208@qq.com
+
 an IM&amp;RTC project
 
 ### 技术

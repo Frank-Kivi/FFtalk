@@ -8,15 +8,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class VoipActivity extends AppCompatActivity {
+import com.frank.fftalk.databinding.ActivityVoipBinding;
+
+public class VoipActivity extends BaseActivity<ActivityVoipBinding> {
     public static void start(Context context,String name) {
         Intent starter = new Intent(context,VoipActivity .class);
         starter.putExtra(FriendName,name);
         context.startActivity(starter);
     }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_voip);
+    protected int getLayoutId() {
+        return R.layout.activity_voip;
     }
 }

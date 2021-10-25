@@ -42,5 +42,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket
     implementation 'org.java-websocket:Java-WebSocket:1.5.2'
     implementation 'org.greenrobot:eventbus:3.2.0'
+// https://mvnrepository.com/artifact/org.webrtc/google-webrtc
+    implementation 'org.webrtc:google-webrtc:1.0.32006'
 
 }
